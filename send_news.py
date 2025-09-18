@@ -1,7 +1,7 @@
 import os, smtplib, requests, datetime
 from email.mime.text import MIMEText
 
-KEY = '把你的 NewsAPI 密钥粘这里'
+KEY = '89b89f6d8ca841ac98ad1dbe6af33d8b'
 url = f'https://newsapi.org/v2/top-headlines?country=cn&apiKey={KEY}&pageSize=5'
 data = requests.get(url, timeout=10).json()
 titles = [n['title'] for n in data['articles']]
