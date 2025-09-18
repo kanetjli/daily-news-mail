@@ -1,0 +1,21 @@
+name: Daily News Mail
+on:
+  schedule:
+    - cron: '0 8 * * *'      # UTC 8 点 = 北京 16 点，先设这个方便测试
+  workflow_dispatch:         # 手动按钮
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python send_news.py
+        env:
+          SMTP_SERVER: smtp.sina.com
+          SMTP_PORT: 465
+          SMTP_USER: ${{ secrets.MAIL_USER }}
+          SMTP_PWD: ${{ secrets.MAIL_PWD }}
+          TO_MAIL: ${{ secrets.TO_MAIL }}
