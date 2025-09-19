@@ -7,7 +7,7 @@ body = ""
 
 # --- 新闻获取 ---
 try:
-    KEY = '89b89f6d8ca841ac98ad1dbe6af33d8b'
+    KEY = 'a1972d21bb604c15b54a07b7c491c6cd'
     url = 'https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=' + KEY + '&pageSize=5'
     response = requests.get(url, timeout=10)
     response.raise_for_status() # 如果状态码不是200，则抛出异常
