@@ -1,23 +1,22 @@
-import os, smtplib, requests, datetime
+import os, smtplib, datetime
 from email.mime.text import MIMEText
 
-KEY = '89b89f6d8ca841ac98ad1dbe6af33d8b'
-url = 'https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=' + KEY + '&pageSize=5'
-data = requests.get(url, timeout=10).json()
+# 设置邮件内容
+subject = f'GitHub Actions 测试邮件 {datetime.date.today()}'
+body = '恭喜您！这封邮件是来自您的 GitHub Actions 自动化工作流的测试邮件。'
 
-# 拼接“标题 + 原文链接”
-lines = []
-for n in data['articles']:
-    lines.append(f'• {n["title"]}')
-    lines.append(f'  阅读原文：{n["url"]}')
-body = 'BBC 今日头条：\n\n' + '\n'.join(lines)
-
-msg = MIMEText(body, 'plain', 'utf-8')   # 纯文本也能点，大多数客户端会自动识别 URL
-msg['Subject'] = f'GitHub 每日新闻 {datetime.date.today()}'
+msg = MIMEText(body, 'plain', 'utf-8')
+msg['Subject'] = subject
 msg['From'] = os.getenv('SMTP_USER')
 msg['To'] = os.getenv('TO_MAIL')
 
-with smtplib.SMTP_SSL(os.getenv('SMTP_SERVER'), int(os.getenv('SMTP_PORT'))) as smtp:
-    smtp.login(os.getenv('SMTP_USER'), os.getenv('SMTP_PWD'))
-    smtp.send_message(msg)
-print('邮件已发送!')
+try:
+    with smtplib.SMTP_SSL(os.getenv('SMTP_SERVER'), int(os.getenv('SMTP_PORT'))) as smtp:
+        smtp.login(os.getenv('SMTP_USER'), os.getenv('SMTP_PWD'))
+        smtp.send_message(msg)
+        print('测试邮件已发送！')
+except Exception as e:
+    print(f"邮件发送失败：{e}")
+    # 您还可以将错误信息写入文件或直接打印到日志中，以便在 GitHub Actions 中查看
+    with open("error.log", "w") as f:
+        f.write(str(e))
